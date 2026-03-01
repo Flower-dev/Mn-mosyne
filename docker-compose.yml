@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  next-app:
+    build:
+      dockerfile: dockerfile
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    # command: npm run dev
+    environment:
+      - NODE_ENV=development
+      - AUTH_TRUST_HOST=true
+      - NEXTAUTH_URL=https://localhost/api/auth
+    restart: unless-stopped

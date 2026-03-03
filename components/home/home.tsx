@@ -22,10 +22,9 @@ const Home = () => {
         </div>
 
         {/* Title */}
-        <h1 className="bg-linear-to-br from-foreground via-foreground/80 to-amber-600/70 bg-clip-text text-5xl font-extrabold leading-[1.1] tracking-tight text-transparent sm:text-6xl lg:text-7xl">
-          Your Content.
-          <br />
-          <span className="bg-linear-to-r from-amber-600 to-purple-900 bg-clip-text">Your Flow.</span>
+        <h1 className="bg-linear-to-br from-amber-600 to-purple-900 bg-clip-text text-5xl font-extrabold leading-[1.1] tracking-tight text-transparent sm:text-6xl lg:text-7xl">
+          Your Content. Your Flow.
+        
         </h1>
 
         {/* Description */}

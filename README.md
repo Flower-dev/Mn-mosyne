@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mnemosyne — Your Content, Your Flow
 
-## Getting Started
+Agrégateur RSS full-stack moderne permettant de centraliser et consommer ses sources d'information au sein d'une interface unifiée et sans distraction. Construit avec **Next.js 16**, **React 19**, **Tailwind CSS 4** et **NextAuth v5**.
 
-First, run the development server:
+## Fonctionnalités
+
+| Fonctionnalité | État | Description |
+|---|---|---|
+| Authentification | ✅ | Connexion email/mot de passe & OAuth Google |
+| Gestion de flux RSS | 🚧 | Ajout, suppression, rafraîchissement de flux RSS/Atom |
+| Feed d'articles | 🚧 | Agrégation paginée, filtres, recherche full-text |
+| Favoris & Collections | 🚧 | Marquer des articles, organiser en collections |
+| Tags & Catégories | 🚧 | Classement par thème et couleur |
+| Résumé IA | 🚧 | Résumé automatique via Claude API (Anthropic) |
+| Alertes mots-clés | 📋 | Notifications par email sur termes spécifiques |
+| Digest email | 📋 | Résumé quotidien/hebdomadaire via Resend |
+| Import/Export OPML | 📋 | Interopérabilité avec Feedly, Inoreader… |
+
+> Voir [Features.md](Features.md) pour la documentation technique complète.
+
+## Stack technique
+
+- **Framework** — Next.js 16 (App Router)
+- **UI** — React 19, Tailwind CSS 4, Radix UI, shadcn/ui, Lucide Icons
+- **Auth** — NextAuth v5 (Google OAuth + Credentials)
+- **Validation** — Zod, Yup, React Hook Form
+- **State** — TanStack React Query
+- **i18n** — next-intl
+- **Base de données** — PostgreSQL (via Docker)
+- **ORM** — Prisma (prévu)
+- **Conteneurisation** — Docker & Docker Compose
+
+## Prérequis
+
+- [Node.js](https://nodejs.org/) ≥ 20
+- [Docker](https://www.docker.com/) & Docker Compose
+- Un compte Google Cloud pour les identifiants OAuth (optionnel)
+
+## Installation
+
+```bash
+# Cloner le dépôt
+git clone <repo-url> && cd mnemosyne
+
+# Installer les dépendances
+npm install
+```
+
+### Variables d'environnement
+
+Créer un fichier `.env.local` à la racine :
+
+```env
+AUTH_SECRET=<votre-secret>
+AUTH_GOOGLE_ID=<google-client-id>
+AUTH_GOOGLE_SECRET=<google-client-secret>
+AUTH_DEMO_EMAIL=<email-demo>
+AUTH_DEMO_PASSWORD=<mot-de-passe-demo>
+AUTH_TRUST_HOST=true
+AUTH_URL=http://localhost:3000
+```
+
+## Lancement
+
+### Développement local
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application est accessible sur [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Via Docker
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+docker compose up
+```
 
-## Learn More
+Cela démarre :
+- **app** — l'application Next.js sur le port `3000`
+- **db** — PostgreSQL sur le port `5432`
+- **adminer** — interface d'administration DB sur le port `8080`
 
-To learn more about Next.js, take a look at the following resources:
+## Structure du projet
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+├── app/                  # App Router (pages, layouts, API routes)
+│   ├── api/auth/         # Route handler NextAuth
+│   ├── auth/             # Page d'authentification
+│   └── globals.css       # Styles globaux
+├── components/           # Composants React
+│   ├── auth/             # Formulaires & OAuth
+│   ├── home/             # Page d'accueil
+│   └── ui/               # Composants UI (shadcn)
+├── lib/                  # Utilitaires & validateurs
+├── auth.ts               # Configuration NextAuth
+├── routes.ts             # Définition des routes
+├── proxy.ts              # Proxy configuration
+├── docker-compose.yml    # Orchestration Docker
+└── dockerfile            # Image Docker (Node 24 Alpine)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+| Commande | Description |
+|---|---|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build de production |
+| `npm run start` | Serveur de production |
+| `npm run lint` | Linting ESLint |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Licence
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Projet privé.

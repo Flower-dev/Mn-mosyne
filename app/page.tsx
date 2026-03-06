@@ -2,6 +2,7 @@
 
 import { Home } from "@/components/home/home"
 import { Auth } from "./auth/auth"
+import { Suspense } from "react"
 
 export default function HomePage() {
 
@@ -20,7 +21,9 @@ export default function HomePage() {
       {/* Content */}
       <div className="mx-auto flex min-h-screen w-full max-w-400 flex-col items-center justify-center gap-12 px-5 py-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:px-10 lg:py-0">
         <Home />
-        <Auth />
+        <Suspense>
+          <Auth />
+        </Suspense>
       </div>
     </main>
   )

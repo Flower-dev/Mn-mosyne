@@ -5,6 +5,8 @@ services:
       dockerfile: dockerfile
     ports:
       - '127.0.0.1:3000:3000'
+    depends_on:
+      - db
     volumes:
       - .:/app
       - /app/node_modules
@@ -13,15 +15,19 @@ services:
       - NODE_ENV=development
       - AUTH_TRUST_HOST=true
       - AUTH_URL=http://localhost:3000
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
     restart: unless-stopped
 
   db:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - '5432:5432'
   adminer:

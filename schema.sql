@@ -38,6 +38,7 @@ CREATE TABLE users (
   email VARCHAR(255),
   "emailVerified" TIMESTAMPTZ,
   image TEXT,
+  password_hash TEXT,
 
   PRIMARY KEY (id)
 );

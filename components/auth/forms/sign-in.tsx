@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { authClient } from "@/lib/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
@@ -33,22 +33,18 @@ const SignInForm = () => {
     const onSubmit = async (values: SignInInput) => {
         setAuthError(null)
 
-        const result = await signIn("credentials", {
+        const { error } = await authClient.signIn.email({
             email: values.email,
             password: values.password,
-            redirect: false,
-            callbackUrl: "/",
         })
 
-        if (result?.error) {
+        if (error) {
             setAuthError("Identifiants invalides")
             return
         }
 
-        if (result?.url) {
-            router.push(result.url)
-            router.refresh()
-        }
+        router.push("/app")
+        router.refresh()
     }
 
     return (

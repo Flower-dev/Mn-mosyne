@@ -13,6 +13,9 @@ services:
     # command: npm run dev
     environment:
       - NODE_ENV=development
+      - AUTH_SECRET=${AUTH_SECRET}
+      - AUTH_GOOGLE_ID=${AUTH_GOOGLE_ID}
+      - AUTH_GOOGLE_SECRET=${AUTH_GOOGLE_SECRET}
       - AUTH_TRUST_HOST=true
       - AUTH_URL=http://localhost:3000
       - DATABASE_HOST=${DATABASE_HOST}
@@ -30,6 +33,8 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - '5432:5432'
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
   adminer:
     image: adminer

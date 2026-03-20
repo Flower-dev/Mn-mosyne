@@ -1,44 +1,47 @@
-CREATE TABLE verification_token (
-  identifier TEXT NOT NULL,
-  expires TIMESTAMPTZ NOT NULL,
-  token TEXT NOT NULL,
-
-  PRIMARY KEY (identifier, token)
-);
-
-CREATE TABLE accounts (
-  id SERIAL,
-  "userId" INTEGER NOT NULL,
-  type VARCHAR(255) NOT NULL,
-  provider VARCHAR(255) NOT NULL,
-  "providerAccountId" VARCHAR(255) NOT NULL,
-  refresh_token TEXT,
-  access_token TEXT,
-  expires_at BIGINT,
-  id_token TEXT,
-  scope TEXT,
-  session_state TEXT,
-  token_type TEXT,
-
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE sessions (
-  id SERIAL,
-  "userId" INTEGER NOT NULL,
-  expires TIMESTAMPTZ NOT NULL,
-  "sessionToken" VARCHAR(255) NOT NULL,
-
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE users (
-  id SERIAL,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  "emailVerified" TIMESTAMPTZ,
+-- Better Auth schema
+CREATE TABLE IF NOT EXISTS "user" (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  "emailVerified" BOOLEAN NOT NULL DEFAULT false,
   image TEXT,
-  password_hash TEXT,
-
-  PRIMARY KEY (id)
+  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS "session" (
+  id TEXT NOT NULL PRIMARY KEY,
+  "expiresAt" TIMESTAMP NOT NULL,
+  token TEXT NOT NULL UNIQUE,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "ipAddress" TEXT,
+  "userAgent" TEXT,
+  "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS "account" (
+  id TEXT NOT NULL PRIMARY KEY,
+  "accountId" TEXT NOT NULL,
+  "providerId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+  "accessToken" TEXT,
+  "refreshToken" TEXT,
+  "idToken" TEXT,
+  "accessTokenExpiresAt" TIMESTAMP,
+  "refreshTokenExpiresAt" TIMESTAMP,
+  scope TEXT,
+  password TEXT,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS "verification" (
+  id TEXT NOT NULL PRIMARY KEY,
+  identifier TEXT NOT NULL,
+  value TEXT NOT NULL,
+  "expiresAt" TIMESTAMP NOT NULL,
+  "createdAt" TIMESTAMP,
+  "updatedAt" TIMESTAMP
+);
+

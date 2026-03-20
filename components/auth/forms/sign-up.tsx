@@ -2,12 +2,11 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { authClient } from "@/lib/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { signUpSchema, type SignUpInput } from "@/lib/validators/auth"
-import { register } from "@/lib/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -36,30 +35,20 @@ const SignUpForm = () => {
     const onSubmit = async (values: SignUpInput) => {
         setAuthError(null)
 
-        const result = await register(values)
-
-        if (!result.success) {
-            setAuthError(result.error)
-            return
-        }
-
-        // Auto sign-in after registration
-        const signInResult = await signIn("credentials", {
+        const { error } = await authClient.signUp.email({
             email: values.email,
             password: values.password,
-            redirect: false,
-            callbackUrl: "/",
+            name: values.name,
+            callbackURL: "/app",
         })
 
-        if (signInResult?.error) {
-            setAuthError("Compte créé, mais la connexion a échoué. Veuillez vous connecter.")
+        if (error) {
+            setAuthError(error.message ?? "Une erreur est survenue.")
             return
         }
 
-        if (signInResult?.url) {
-            router.push(signInResult.url)
-            router.refresh()
-        }
+        router.push("/app")
+        router.refresh()
     }
 
     return (
